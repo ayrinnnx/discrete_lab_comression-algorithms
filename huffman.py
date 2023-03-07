@@ -1,5 +1,5 @@
 """Huffman coding.
-Includes encoding and decodind.
+Includes encoding and decoding.
 """
 from collections import defaultdict
 
@@ -15,10 +15,11 @@ class Huffman:
         self.path = path
         self.probability = defaultdict(int)
 
+
     def reading(self) -> dict:
         """
         Reading our txt file, representing it as dictionary of letters and their occurance.
-        Sorting it from the most usable.
+        Sorting it from the less usable.
         """
         with open(self.path, "r", encoding="utf-8") as file:
             lines = file.readlines()
@@ -26,12 +27,36 @@ class Huffman:
                 for elem in line.strip():
                     self.probability[elem] += line.count(elem)
         # sorting dictionary from the less usable till the most
-        self.probability = dict(
-            sorted(self.probability.items(), key=lambda item: item[1])
-        )
+        # self.probability = dict(
+        #     sorted(self.probability.items(), key=lambda item: item[1])
+        # )
         return self.probability
+
+
+    def algorithm(self) -> dict:
+        """
+        Main algprithm of finding binary code.
+        Creates new dict with same keys, but values are interpreted
+        as '0' and '1'. The result of code is reversed.
+        >>> algorithm()
+        """
+        value_dic = defaultdict(str) #dict to which we will add 0 and 1
+        items = sorted(self.probability.items()) # ('letter', counting)
+        while len(items) > 1:
+            summing_value = items[0][1] + items[1][1]
+            items.append((items[0][0] + items[1][0], summing_value))
+            for letter in items[0][0]:
+                value_dic[letter] += '0'
+            for letter in items[1][0]:
+                value_dic[letter] += '1'
+            del items[0]
+            del items[0]
+            items.sort(key = lambda x: x[1])
+        for key, elem in value_dic.items():
+            value_dic[key] = elem[::-1]
+        return value_dic
 
 
 trying = Huffman("read.txt")
 res = trying.reading()
-print(res)
+print(trying.algorithm())
