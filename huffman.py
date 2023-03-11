@@ -19,19 +19,13 @@ class Huffman:
     def reading(self) -> dict:
         """
         Reading our txt file, representing it as dictionary of letters and their occurance.
-        Sorting it from the less usable.
         """
         with open(self.path, "r", encoding="utf-8") as file:
             lines = file.readlines()
             for line in lines:
                 for elem in line.strip():
                     self.probability[elem] += line.count(elem)
-        # sorting dictionary from the less usable till the most
-        # self.probability = dict(
-        #     sorted(self.probability.items(), key=lambda item: item[1])
-        # )
         return self.probability
-
 
     def algorithm(self) -> dict:
         """
@@ -56,7 +50,28 @@ class Huffman:
             value_dic[key] = elem[::-1]
         return value_dic
 
+    def encoding(self, dictionary, file_write = 'encoded.txt'):
+        """
+        Encoding of the text.
+        """
+        encoded_file = open(file_write, 'w', encoding='utf-8')
+        with open(self.path, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+            for line in lines:
+                for letter in line:
+                    encoded_file.write(dictionary[letter])
+                encoded_file.write('\n')
+        encoded_file.close()
+
+    def decoding(self, dictionary, file_read = 'encoded.txt', file_write = 'decoded.txt'):
+        """
+        Decoding given code.
+        """
+        pass
+
+
 
 trying = Huffman("read.txt")
 res = trying.reading()
-print(trying.algorithm())
+dic = trying.algorithm()
+trying.encoding(dic)
