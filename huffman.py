@@ -32,7 +32,6 @@ class Huffman:
         Main algprithm of finding binary code.
         Creates new dict with same keys, but values are interpreted
         as '0' and '1'. The result of code is reversed.
-        >>> algorithm()
         """
         value_dic = defaultdict(str) #dict to which we will add 0 and 1
         items = sorted(self.probability.items()) # ('letter', counting)
@@ -67,7 +66,24 @@ class Huffman:
         """
         Decoding given code.
         """
-        pass
+        reversed_dic = dict([(value, key) for key, value in dictionary.items()])
+        code_keys = reversed_dic.keys()
+        file_write = open(file_write, 'w', encoding='utf-8')
+        with open(file_read, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            for ind, line in enumerate(lines):
+                decoded_str = ''
+                find_elem = ''
+                for elem in line:
+                    find_elem += elem
+                    if find_elem in code_keys:
+                        decoded_str += reversed_dic[find_elem]
+                        find_elem = ''
+                file_write.write(decoded_str)
+                if ind != len(lines) - 1:
+                    file_write.write('\n')
+        file_write.close()
+
 
 
 
@@ -75,3 +91,4 @@ trying = Huffman("read.txt")
 res = trying.reading()
 dic = trying.algorithm()
 trying.encoding(dic)
+trying.decoding(dic)
